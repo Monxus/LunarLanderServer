@@ -6,6 +6,7 @@
 package Servlet;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
@@ -98,7 +99,34 @@ public class GetConfig extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            String dificultad = request.getParameter("dificultad");
+            String nave = request.getParameter("nave");
+            String lugar = request.getParameter("lugar");
+
+            ServletContext context = getServletContext();
+            String fullPath = context.getRealPath("/json/config.json");
+
+            String filecontent = "{\"dificultad\":\"" + dificultad + "\",\"nave\":\"" + nave + "\",\"lugar\":\"" + lugar + "\"}";
+
+            //Create File object
+            File f = new File(fullPath);
+            FileWriter fw = new FileWriter(f);
+            fw.write(filecontent);
+            fw.close();
+
+            response.setContentType("application/json");
+            PrintWriter pw = response.getWriter();
+            pw.println("{\"mess\":\"Se han guardado los cambios en la configuración\"}");
+
+        } catch (Exception e) {
+
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.setContentType("application/json");
+            PrintWriter pw = response.getWriter();
+            pw.println("{\"error\":\"Error al guardar la configuración del juego\"}");
+
+        }
     }
 
     /**
