@@ -33,7 +33,7 @@ var lugarOtro;
 
 //al cargar por completo la página...
 window.onload = function(){
-        $(document).ready(function(){
+        
                 var url = "GetConfig";
                 var emess = "Error desconocido";
 
@@ -41,9 +41,9 @@ window.onload = function(){
                     url: url,
                     dataType: 'json',
                     success: function (jsn) {
-                        console.log("Dificultad: " + jsn.dificultad 
-                        + "<br>Tipo nave: " + jsn.nave + "<br>Lugar aterrizaje: " + jsn.lugar);
                         seleccionarLugar(jsn.lugar);
+                        seleccionarNave(jsn.nave);
+                        seleccionarDif(jsn.dificultad)
                     },
                     error: function (e) {
                         if (e["responseJSON"] === undefined)
@@ -52,7 +52,7 @@ window.onload = function(){
                             alert(e["responseJSON"]["error"]);
                     }
                 });
-            });        
+                   
         
 	mensajeBienvenida();
 
@@ -176,29 +176,29 @@ window.onload = function(){
 
 	//Seleccion de nivel
 	document.getElementById("facilNivel").onclick = function(){
-		seleccionarFacil();
+		seleccionarDif("facil");
 	}
 	document.getElementById("medioNivel").onclick = function(){
-		seleccionarMedio();
+		seleccionarDif("medio");
 	}
 	document.getElementById("dificilNivel").onclick = function(){
-		seleccionarDificil();
+		seleccionarDif("dificil");
 	}
 
 	//Seleccion nave
 	document.getElementById("naveOpcion").onclick = function(){
-		seleccionarNave();
+		seleccionarNave("nave");
 	}
 	document.getElementById("ovniOpcion").onclick = function(){
-		seleccionarOvni();
+		seleccionarNave("ovni");
 	}
 
 	//Seleccion de fondo
 	document.getElementById("lunaOpcion").onclick = function(){
-		seleccionarLuna();
+		seleccionarLugar("luna");
 	}
 	document.getElementById("marteOpcion").onclick = function(){
-		seleccionarMarte();
+		seleccionarLugar("marte");
 	}
 
 	//Restart fin Juego
@@ -417,48 +417,42 @@ function ocultar(){
 
 //Seleccionar nivel
 
-function seleccionarFacil(){
-	fuelInicial=100;
-	velocidadImpacto=5;
-	anteriorNivel = ahoraNivel;
-	ahoraNivel = "facil";
-	ponerMarcasNivel();
-	document.getElementById("parrafoNivel").innerHTML="FÁCIL: Tienes 100 litros de combustible y debes aterrizar a menos de 5 m/s.";	
-	reiniciarConfiguracion();
-}
-
-function seleccionarMedio(){
-	fuelInicial=75;
-	velocidadImpacto=2.5;
-	anteriorNivel = ahoraNivel;
-	ahoraNivel = "medio";
-	ponerMarcasNivel();
-	document.getElementById("parrafoNivel").innerHTML="MEDIO: Tienes 75 litros de combustible y debes aterrizar a menos de 2.5 m/s.";
-	reiniciarConfiguracion();
-}
-
-function seleccionarDificil(){
-	fuelInicial=50;
-	velocidadImpacto=1;
-	anteriorNivel = ahoraNivel;
-	ahoraNivel = "dificil";
-	ponerMarcasNivel();
-	document.getElementById("parrafoNivel").innerHTML="DIFÍCIL: Tienes 50 litros de combustible y debes aterrizar a menos de 1 m/s.";
-	reiniciarConfiguracion();
+function seleccionarDif(difAux){
+    var msj="";
+    switch (difAux){
+        case "facil":
+            fuelInicial=100;
+            velocidadImpacto=5;
+            anteriorNivel = ahoraNivel;
+            ahoraNivel = "facil";
+            msj="FÁCIL: Tienes 100 litros de combustible y debes aterrizar a menos de 5 m/s.";
+            break;
+        case "medio":
+            fuelInicial=75;
+            velocidadImpacto=2.5;
+            anteriorNivel = ahoraNivel;
+            ahoraNivel = "medio";
+            msj="MEDIO: Tienes 75 litros de combustible y debes aterrizar a menos de 2.5 m/s.";
+            break;
+        case "dificil":
+            fuelInicial=50;
+            velocidadImpacto=1;
+            anteriorNivel = ahoraNivel;
+            ahoraNivel = "dificil";
+            msj="DIFÍCIL: Tienes 50 litros de combustible y debes aterrizar a menos de 1 m/s.";
+            break;
+    }
+    ponerMarcasNivel();
+    document.getElementById("parrafoNivel").innerHTML=msj;	
+    reiniciarConfiguracion();
 }
 
 //Seleccionar nave
 
-function seleccionarNave(){
-	naveImg="nave";
-	naveOtra="ovni";
-	ponerMarcasNave();
-}
-
-function seleccionarOvni(){
-	naveImg="ovni";
-	naveOtra="nave";
-	ponerMarcasNave();
+function seleccionarNave(naveAux){
+    naveImg=naveAux;
+    naveOtra = (naveAux==="nave") ? "ovni":"nave";
+    ponerMarcasNave();
 }
 
 //Seleccion lugar aterrizaje
@@ -474,25 +468,8 @@ function seleccionarLugar(lugarAux){
     
     ponerMarcasAterrizaje();
 }
-/*
-function seleccionarLuna(){
-	lugarAterrizaje = "luna";
-	lugarOtro="marte";
-	document.getElementsByClassName("d")[0].style.backgroundImage="url('img/LUN001.png')";
-	document.getElementsByClassName("d")[0].style.backgroundColor="#787878";
-	document.getElementById("lunaOpcion").style.textDecoration="underline";
-	document.getElementById("marteOpcion").style.textDecoration="none";
-	ponerMarcasAterrizaje();
-}
 
-function seleccionarMarte(){
-	lugarAterrizaje = "marte";
-	lugarOtro="luna";
-	document.getElementsByClassName("d")[0].style.backgroundImage="url('img/MARS001.png')";
-	document.getElementsByClassName("d")[0].style.backgroundColor="#DB1616";
-	ponerMarcasAterrizaje();
-}
-*/
+// Arreglar colores menú después de cambiar de opción
 function ponerMarcasNivel(){
 	document.getElementById(anteriorNivel+"Nivel").style.textDecoration ="none";
 	document.getElementById(anteriorNivel+"Nivel").style.backgroundColor ="dodgerblue";
