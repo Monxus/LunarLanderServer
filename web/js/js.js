@@ -206,6 +206,11 @@ window.onload = function () {
         start();
         motorOff();
     }
+    document.getElementById("botonGuardar").onclick = function () {
+        guardarConfig();
+    }
+
+    
 
 }
 
@@ -446,7 +451,7 @@ function seleccionarDif(difAux) {
             msj = "DIFÍCIL: Tienes 50 litros de combustible y debes aterrizar a menos de 1 m/s.";
             break;
     }
-    guardarConfig();
+    
     ponerMarcasNivel();
     document.getElementById("parrafoNivel").innerHTML = msj;
     reiniciarConfiguracion();
@@ -457,7 +462,6 @@ function seleccionarDif(difAux) {
 function seleccionarNave(naveAux) {
     naveImg = naveAux;
     naveOtra = (naveAux === "nave") ? "ovni" : "nave";
-    guardarConfig();
     
     ponerMarcasNave();
 }
@@ -469,8 +473,6 @@ function seleccionarLugar(lugarAux) {
     lugarOtro = (lugarAux === "luna") ? "marte" : "luna";
     var urlAux = (lugarAux === "luna") ? "url('img/LUN001.png')" : "url('img/MARS001.png')";
     var colorAux = (lugarAux === "luna") ? "#787878" : "#DB1616";
-    
-    guardarConfig();
 
     document.getElementsByClassName("d")[0].style.backgroundImage = urlAux;
     document.getElementsByClassName("d")[0].style.backgroundColor = colorAux;
