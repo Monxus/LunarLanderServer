@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuraciones>
+    <config id="0">
+        <nombre>Default</nombre>
+        <dificultad>facil</dificultad>
+        <nave>nave</nave>
+        <lugar>luna</lugar>
+    </config>
+    <config id="1">
+        <nombre>Custom</nombre>
+        <dificultad>dificil</dificultad>
+        <nave>ovni</nave>
+        <lugar>marte</lugar>
+    </config>
+</configuraciones>
+

@@ -10,11 +10,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
+import java.io.StringWriter;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXB;
+import configJAXB.Configuraciones;
+import configJAXB.ObjectFactory;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 
 /**
  *
@@ -60,24 +66,22 @@ public class GetConfig extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            ServletContext context = getServletContext();
-            String fullPath = context.getRealPath("/json/config.json");
-
-//Create File object
-            File f = new File(fullPath);
-            String jsonString = null;
-
-//Create RandomAccessFile Object to read
-            RandomAccessFile frar = new RandomAccessFile(f, "r");
-            jsonString = frar.readLine();
-            /* use readUTF() only with writeUTF(); */
-            frar.close();
-
-            response.setContentType("application/json");
-            PrintWriter pw = response.getWriter();
-            pw.println(jsonString);
-
+        try{
+        //Set new File object
+        ServletContext context = getServletContext();
+        String fullPath = context.getRealPath("/config.xml");
+        File f = new File(fullPath);
+//parse xml to object (Personas, previusly created with JAXB)
+        ObjectFactory jaxb = new ObjectFactory();
+        Configuraciones configs = jaxb.xmlToObject(f);  //En aquest punt podem modificar prs, es un objecte.
+//marshall object to string xml
+        StringWriter sw = new StringWriter();
+        JAXB.marshal(configs, sw);
+        String xmlString = sw.toString();
+//return XML
+        response.setContentType("text/xml");
+        PrintWriter pw = response.getWriter();
+        pw.println(xmlString);
         } catch (Exception e) {
 
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -100,24 +104,39 @@ public class GetConfig extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            String nombre = request.getParameter("nombre");
             String dificultad = request.getParameter("dificultad");
             String nave = request.getParameter("nave");
             String lugar = request.getParameter("lugar");
-
+            
             ServletContext context = getServletContext();
-            String fullPath = context.getRealPath("/json/config.json");
-
-            String filecontent = "{\"dificultad\":\"" + dificultad + "\",\"nave\":\"" + nave + "\",\"lugar\":\"" + lugar + "\"}";
-
-            //Create File object
+            String fullPath = context.getRealPath("/config.xml");
+            
             File f = new File(fullPath);
-            FileWriter fw = new FileWriter(f);
-            fw.write(filecontent);
-            fw.close();
+
+//parsear el fichero
+            ObjectFactory jaxb = new ObjectFactory();
+            Configuraciones configs = jaxb.xmlToObject(f);
+
+            Configuraciones.Config c = new Configuraciones.Config();
+            byte num = 2;
+            c.setId(num);
+            c.setNombre(nombre);
+            c.setDificultad(dificultad);
+            c.setNave(nave);
+            c.setLugar(lugar);
+            configs.getConfig().add(c);
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(Configuraciones.class);
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            jaxbMarshaller.marshal(configs, f);
 
             response.setContentType("application/json");
             PrintWriter pw = response.getWriter();
-            pw.println("{\"mess\":\"Se han guardado los cambios en la configuración\"}");
+            pw.println("{\"mess\":\"Se ha guardado correctamente\"}");
 
         } catch (Exception e) {
 
