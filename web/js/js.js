@@ -44,23 +44,21 @@ window.onload = function () {
     $.ajax({
 
         url: url,
-        dataType: 'xml',
-        success: function (dataXml) {
-            $(dataXml).find('config').each(function (i)
-            {
-                //alert(i); //i = index
-                var nombre = $(this).find('nombre').text();
-                var dificultad = $(this).find('dificultad').text();
-                var nave = $(this).find('nave').text();
-                var lugar = $(this).find('lugar').text();
-                arrayConfig.push([nombre, dificultad, nave, lugar]);
+        dataType: 'json',
+        success: function (jsn) {
+
+            $.each(jsn.config, function(i) {
+
+                var nombreAux = this.nombre;
+                var dificultadAux = this.dificultad;
+                var naveAux = this.nave;
+                var lugarAux = this.lugar;
+                arrayConfig.push([nombreAux, dificultadAux, naveAux, lugarAux]);
                 
-                $("#selOpciones").append("<option id=" + i + ">" + nombre + " (" + dificultad +
-                        ", " + nave + ", " + lugar + ")</option>");
+                $("#selOpciones").append("<option id=" + i + ">" + nombreAux + " (" + dificultadAux +
+                        ", " + naveAux + ", " + lugarAux + ")</option>");
 
                 indexConfig++;
-
-
 
             });
         },
@@ -568,7 +566,6 @@ function cargarConfig() {
 function guardarConfig() {
     if (comprobarConfig()) {
         var name = $("#nameConfig").val();
-
 
         var url = "GetConfig";
         var emess = "Error desconocido";

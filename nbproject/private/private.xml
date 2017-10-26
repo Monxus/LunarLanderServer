@@ -3,12 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Ramon/Documents/NetBeansProjects/LunarLander_Tasca4/src/java/Servlet/GetConfig.java</file>
-            <file>file:/C:/Users/Ramon/Documents/NetBeansProjects/LunarLander_Tasca4/build/generated-sources/jaxb/configJAXB/ObjectFactory.java</file>
-            <file>file:/C:/Users/Ramon/Documents/NetBeansProjects/LunarLander_Tasca4/web/js/js.js</file>
-            <file>file:/C:/Users/Ramon/Documents/NetBeansProjects/LunarLander_Tasca4/web/index.html</file>
-            <file>file:/C:/Users/Ramon/Documents/NetBeansProjects/LunarLander_Tasca4/web/css/d.css</file>
-            <file>file:/C:/Users/Ramon/Documents/NetBeansProjects/LunarLander_Tasca4/web/config.xml</file>
+            <file>file:/C:/Users/Ramon/Documents/NetBeansProjects/LunarLander_GSON/src/java/Servlet/Configuraciones.java</file>
+            <file>file:/C:/Users/Ramon/Documents/NetBeansProjects/LunarLander_GSON/src/java/Servlet/GetConfig.java</file>
+            <file>file:/C:/Users/Ramon/Documents/NetBeansProjects/LunarLander_GSON/web/js/js.js</file>
+            <file>file:/C:/Users/Ramon/Documents/NetBeansProjects/LunarLander_GSON/web/json/config.json</file>
         </group>
     </open-files>
 </project-private>

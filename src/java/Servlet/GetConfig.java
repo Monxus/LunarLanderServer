@@ -5,22 +5,17 @@
  */
 package Servlet;
 
+import com.google.gson.Gson;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.RandomAccessFile;
-import java.io.StringWriter;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.JAXB;
-import configJAXB.Configuraciones;
-import configJAXB.ObjectFactory;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
 
 /**
  *
@@ -66,22 +61,23 @@ public class GetConfig extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try{
-        //Set new File object
-        ServletContext context = getServletContext();
-        String fullPath = context.getRealPath("/config.xml");
-        File f = new File(fullPath);
-//parse xml to object (Personas, previusly created with JAXB)
-        ObjectFactory jaxb = new ObjectFactory();
-        Configuraciones configs = jaxb.xmlToObject(f);  //En aquest punt podem modificar prs, es un objecte.
-//marshall object to string xml
-        StringWriter sw = new StringWriter();
-        JAXB.marshal(configs, sw);
-        String xmlString = sw.toString();
-//return XML
-        response.setContentType("text/xml");
-        PrintWriter pw = response.getWriter();
-        pw.println(xmlString);
+        try {
+            //Archivo donde está la config
+            ServletContext context = getServletContext();
+            String fullPath = context.getRealPath("/json/config.json");
+
+            //Convertimos el fichero json a objeto con gson
+            Gson gson = new Gson();
+            Configuraciones configs = gson.fromJson(new FileReader(fullPath), Configuraciones.class);
+
+//Convertimos el objeto en String
+            String jsonInString = gson.toJson(configs);
+
+//Devolvemos al cliente el string del json
+            response.setContentType("application/json");
+            PrintWriter pw = response.getWriter();
+            pw.println(jsonInString);
+
         } catch (Exception e) {
 
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -108,31 +104,32 @@ public class GetConfig extends HttpServlet {
             String dificultad = request.getParameter("dificultad");
             String nave = request.getParameter("nave");
             String lugar = request.getParameter("lugar");
-            
+
             ServletContext context = getServletContext();
-            String fullPath = context.getRealPath("/config.xml");
+            String fullPath = context.getRealPath("/json/config.json");
             
-            File f = new File(fullPath);
-
-//parsear el fichero
-            ObjectFactory jaxb = new ObjectFactory();
-            Configuraciones configs = jaxb.xmlToObject(f);
-
+            //Convertimos el fichero json a objeto con gson
+            Gson gson = new Gson();
+            Configuraciones configs = gson.fromJson(new FileReader(fullPath), Configuraciones.class);
+           
+            //Creamos el objeto configuracion con la configuración que nos llega
             Configuraciones.Config c = new Configuraciones.Config();
-            byte num = 2;
-            c.setId(num);
             c.setNombre(nombre);
             c.setDificultad(dificultad);
             c.setNave(nave);
             c.setLugar(lugar);
+            
+            //Añadimos la configuración nueva al objeto fichero configuraciones que hemos parseado antes.
             configs.getConfig().add(c);
-
-            JAXBContext jaxbContext = JAXBContext.newInstance(Configuraciones.class);
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-            jaxbMarshaller.marshal(configs, f);
+            
+            //Volvemos a convertir el objeto a fihero json
+            //gson.toJson(configs,new FileWriter(fullPath));
+            
+            String jsonInString = gson.toJson(configs);
+            File f = new File(fullPath);
+            FileWriter fw = new FileWriter(f);
+            fw.write(jsonInString);
+            fw.close();
 
             response.setContentType("application/json");
             PrintWriter pw = response.getWriter();
