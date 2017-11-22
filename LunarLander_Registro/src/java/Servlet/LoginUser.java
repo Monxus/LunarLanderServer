@@ -32,42 +32,59 @@ public class LoginUser extends HttpServlet {
             throws ServletException, IOException {
 
         String cookieName = "uid";
+        String cookieUsername = "username";
+        String cookiePwd = "pwd";
         Cookie[] cookies = request.getCookies();
-        System.out.println("HOLA");
+
+        String idC = null;
+        String usernameC = null;
+        String pwdC = null;
+
         if (cookies != null) {
-            
-            String name = null;
+
             for (int i = 0; i < cookies.length; i++) {
                 Cookie cookie = cookies[i];
-                System.out.println(i);
                 if (cookieName.equals(cookie.getName())) {
-                    MysqlConnectionHandler mysql = new MysqlConnectionHandler();
-                        Connection conn = mysql.doConnection();
-
-                    try {
-
-                        String uid = cookie.getValue();
-
-                        ioBD iobd = new ioBD();
-                        name = iobd.GetNameUser(conn, uid);
-                        request.setAttribute("nombre", name);
-                        RequestDispatcher a = request.getRequestDispatcher("/game.jsp");
-                        a.forward(request, response);
-                        System.out.println("OK");
-                    } catch (SQLException ex) {
-                        Logger.getLogger(LoginUser.class.getName()).log(Level.SEVERE, null, ex);
-                    }finally{
-                        mysql.closeConnection();
-                    }
+                    idC = cookie.getValue();
+                }
+                if (cookieUsername.equals(cookie.getName())) {
+                    usernameC = cookie.getValue();
+                }
+                if (cookiePwd.equals(cookie.getName())) {
+                    pwdC = cookie.getValue();
                 }
             }
-            if(name==null){
-                
+            if (idC == null || usernameC == null || pwdC == null) {
+                RequestDispatcher a = request.getRequestDispatcher("/index.html");
+                a.forward(request, response);
+            } else {
+                MysqlConnectionHandler mysql = new MysqlConnectionHandler();
+                Connection conn = mysql.doConnection();
+                try {
+
+                    ioBD iobd = new ioBD();
+                    User user = iobd.GetUserById(conn, idC);
+                    if (user.getUsername().equals(usernameC) && user.getPwd().equals(pwdC)) {
+                    request.setAttribute("nombre", user.getName());
+                    RequestDispatcher a = request.getRequestDispatcher("/game.jsp");
+                    a.forward(request, response);
+                    }else{
+                       RequestDispatcher a = request.getRequestDispatcher("/index.html");
+                a.forward(request, response); 
+                    }
+                    
+                } catch (SQLException ex) {
+                    Logger.getLogger(LoginUser.class.getName()).log(Level.SEVERE, null, ex);
+                    RequestDispatcher a = request.getRequestDispatcher("/index.html");
+                    a.forward(request, response);
+                } finally {
+                    mysql.closeConnection();
+                }
             }
 
-        }else{
+        } else {
             RequestDispatcher a = request.getRequestDispatcher("/index.html");
-                        a.forward(request, response);
+            a.forward(request, response);
         }
     }
 
@@ -88,9 +105,17 @@ public class LoginUser extends HttpServlet {
                 User user = iobd.GetUser(conn, username);
                 if (user.getPwd().equals(pwd)) {
                     Cookie userCookie = new Cookie("uid", Integer.toString(user.getId()));
+                    Cookie usernameCookie = new Cookie("username", username);
+                    Cookie pwdCookie = new Cookie("pwd", pwd);
                     userCookie.setMaxAge(60 * 60 * 24 * 365);
+                    usernameCookie.setMaxAge(60 * 60 * 24 * 365);
+                    pwdCookie.setMaxAge(60 * 60 * 24 * 365);
                     userCookie.setPath("/");
-                    response.addCookie(userCookie);                  
+                    usernameCookie.setPath("/");
+                    pwdCookie.setPath("/");
+                    response.addCookie(userCookie);
+                    response.addCookie(usernameCookie);
+                    response.addCookie(pwdCookie);
 
                 } else {
                     response.setContentType("application/json");
@@ -112,14 +137,21 @@ public class LoginUser extends HttpServlet {
             mysql.closeConnection();
         }
     }
-    
+
     @Override
-   public void init() {
-       MysqlConnectionHandler mysql = new MysqlConnectionHandler();
+    public void init() {
+        MysqlConnectionHandler mysql = new MysqlConnectionHandler();
         Connection conn = mysql.doConnection();
-        
-        try
-          
-   }
+
+        try {
+            ioBD iobd = new ioBD();
+            iobd.crearTablas(conn);
+        } catch (SQLException ex) {
+            //Logger.getLogger(RegUser.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("La BD ya está creada");
+        } finally {
+            mysql.closeConnection();
+        }
+    }
 
 }

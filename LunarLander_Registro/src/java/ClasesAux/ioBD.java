@@ -41,6 +41,21 @@ public class ioBD {
 
         return userAux;
     }
+    
+    public User GetUserById(Connection conn, String id) throws SQLException {
+        String sql = "SELECT id,name,username,password FROM user WHERE id = ?;";
+        PreparedStatement pst = conn.prepareStatement(sql);
+        pst.setString(1, id);
+        ResultSet rs = pst.executeQuery();
+        rs.next();
+
+        String name = rs.getString("name");
+        String un = rs.getString("username");
+        String pwd = rs.getString("password");
+        User userAux = new User(Integer.parseInt(id), name, un, pwd);
+
+        return userAux;
+    }
 
     public String GetNameUser(Connection conn, String uid) throws SQLException {
         String sql = "SELECT name FROM user WHERE id = ?;";
@@ -84,27 +99,29 @@ public class ioBD {
     }
 
     public void crearTablas(Connection conn) throws SQLException {
+        PreparedStatement pst;
         String sql1 = "CREATE TABLE `configuracion` ("
                 + "`id` int(11) NOT NULL,"
-                + "`user_id` int(11) NOT NULL"
+                + "`user_id` int(11) NOT NULL,"
                 + "`config_name` varchar(20) NOT NULL,"
                 + "`dif_id` int(11) NOT NULL,"
                 + "`nave_id` int(11) NOT NULL,"
                 + "`planeta_id` int(11) NOT NULL"
                 + ") ENGINE=InnoDB DEFAULT CHARSET=latin1;";
-        PreparedStatement pst = conn.prepareStatement(sql1);
-        pst.execute();
+        pst = conn.prepareStatement(sql1);
+        pst.executeUpdate();
 
         String sql2 = "CREATE TABLE `dificultad` (  `id` int(11) NOT NULL,  `dif` varchar(10) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
+
         pst = conn.prepareStatement(sql2);
-        pst.execute();
+        pst.executeUpdate();
 
         String sql3 = "CREATE TABLE `nave` (  `id` int(11) NOT NULL,  `nave` varchar(10) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
         pst = conn.prepareStatement(sql3);
-        pst.execute();
+        pst.executeUpdate();
         String sql4 = "CREATE TABLE `planeta` (  `id` int(11) NOT NULL,  `planeta` varchar(10) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
         pst = conn.prepareStatement(sql4);
-        pst.execute();
+        pst.executeUpdate();
         String sql5 = "CREATE TABLE `score` ("
                 + "`id` int(11) NOT NULL,"
                 + "`conf_id` int(11) NOT NULL,"
@@ -114,7 +131,7 @@ public class ioBD {
                 + "`end_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
                 + ") ENGINE=InnoDB DEFAULT CHARSET=latin1;";
         pst = conn.prepareStatement(sql5);
-        pst.execute();
+        pst.executeUpdate();
 
         String sql6 = "CREATE TABLE `user` ("
                 + "`id` int(11) NOT NULL,"
@@ -123,7 +140,7 @@ public class ioBD {
                 + "`password` varchar(20) NOT NULL"
                 + ") ENGINE=InnoDB DEFAULT CHARSET=latin1;";
         pst = conn.prepareStatement(sql6);
-        pst.execute();
+        pst.executeUpdate();
         String sql7 = "ALTER TABLE `configuracion`"
                 + "ADD PRIMARY KEY (`id`),"
                 + "ADD KEY `user_id` (`user_id`,`dif_id`,`nave_id`,`planeta_id`),"
@@ -131,22 +148,22 @@ public class ioBD {
                 + "ADD KEY `nave_id` (`nave_id`),"
                 + "ADD KEY `planeta_id` (`planeta_id`);";
         pst = conn.prepareStatement(sql7);
-        pst.execute();
+        pst.executeUpdate();
         String sql8 = "ALTER TABLE `dificultad`  ADD PRIMARY KEY (`id`);";
         pst = conn.prepareStatement(sql8);
-        pst.execute();
+        pst.executeUpdate();
         String sql9 = "ALTER TABLE `nave`  ADD PRIMARY KEY (`id`);";
         pst = conn.prepareStatement(sql9);
-        pst.execute();
+        pst.executeUpdate();
         String sql10 = "ALTER TABLE `planeta`  ADD PRIMARY KEY (`id`);";
         pst = conn.prepareStatement(sql10);
-        pst.execute();
+        pst.executeUpdate();
         String sql11 = "ALTER TABLE `score`  ADD PRIMARY KEY (`id`),  ADD KEY `conf_id` (`conf_id`);";
         pst = conn.prepareStatement(sql11);
-        pst.execute();
+        pst.executeUpdate();
         String sql12 = "ALTER TABLE `user`  ADD PRIMARY KEY (`id`);";
         pst = conn.prepareStatement(sql12);
-        pst.execute();
+        pst.executeUpdate();
 //
 //String sql13="ALTER TABLE `configuracion`  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;";
 //
@@ -160,12 +177,11 @@ public class ioBD {
                 + "ADD CONSTRAINT `configuracion_ibfk_3` FOREIGN KEY (`planeta_id`) REFERENCES `planeta` (`id`) ON UPDATE CASCADE,"
                 + "ADD CONSTRAINT `configuracion_ibfk_5` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;";
         pst = conn.prepareStatement(sql16);
-        pst.execute();
+        pst.executeUpdate();
         String sql17 = "ALTER TABLE `score`"
-                + "ADD CONSTRAINT `score_ibfk_1` FOREIGN KEY (`conf_id`) REFERENCES `configuracion` (`id`) ON UPDATE CASCADE;"
-                + "COMMIT;";
+                + "ADD CONSTRAINT `score_ibfk_1` FOREIGN KEY (`conf_id`) REFERENCES `configuracion` (`id`) ON UPDATE CASCADE;";
         pst = conn.prepareStatement(sql17);
-        pst.execute();
+        pst.executeUpdate();
 
     }
 }
