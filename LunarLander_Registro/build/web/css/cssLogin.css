@@ -1,0 +1,101 @@
+html,body,.container {
+    height:100%;
+    background-image: url("../img/FH.png");
+
+}
+
+.container-fluid {
+    height:100%;
+
+}
+
+.row {
+    height: 100%;
+}
+
+.row>div{
+    height:100%;
+}
+
+.vcenter {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.panel,.modal-content{
+    background-image: url("../img/fondometal.png");
+    border: 3px #595959 solid;
+    margin: 0 10%;
+}
+
+.form-control, #instructions{
+    font-weight: bold;
+    background-color: black;
+    color: lime;
+    border: 2px #595959 solid;
+}
+
+.form-control:focus {
+    border-color: limegreen;
+    box-shadow: limegreen;
+}
+
+.panel-default>.panel-heading,.modal-content>.modal-header{
+    background-image: url("../img/fondometal.png");   
+    text-align: center;
+    border-bottom:4px #595959 solid;
+}
+
+#panel-title,.modal-title{
+    font-weight: bold;
+    color: darkorange;
+    background-color: dodgerblue;
+    border: 5px deepskyblue outset;
+    margin:auto;
+}
+
+.panel-body{
+    background-image: url("../img/fondometal.png");   
+}
+
+#instructions{
+    padding: 1% 1%;
+}
+
+.modal-dialog{
+    position: relative;
+    top: 25%;
+    transform: translateY(-25%);
+}
+
+.btn{
+    border:3px solid;
+}
+
+.btn-danger{
+    border-color: #d43f3a;
+}
+
+.btn-success{
+    border-color: #4cae4c
+}
+
+.btn-primary{
+    border-color: #2e6da4
+}
+/*Css desktop*/
+@media screen and (min-width: 769px){
+    .movil{
+        display:none
+    }
+
+}
+
+/*Css movil*/
+@media screen and (max-width: 768px){
+    .pc{
+        display:none;
+    }
+
+}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel='stylesheet' type="text/css" href='css/cssLogin.css'>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="js/jsLogin.js"></script>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row ">
+                <div class="col-sm-4">
+                    <div class="panel panel-default vcenter">
+
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <input class="form-control" placeholder="Nombre de Usuario" name="username" type="text" maxlength="20" id="logUser">
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" placeholder="Contraseña" name="password" type="password" maxlength="20" value="" id="logPwd">
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-lg btn-success btn-block" id="butLogin">Login</button>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-lg btn btn-primary btn-block" id="butReg">Registrarse</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <div class="panel panel-default vcenter">
+                        <div class="panel-heading">
+                            <h1 id="panel-title">INSTRUCCIONES</h1>
+                        </div>
+                        <div class="panel-body" id="panel-instr">
+                            <div id="instructions">
+                                <p>El objetivo de Lunar Lander es aterrizar la nave sobre la superficie de la Luna sin que se estrelle.</p>
+                                <p>Puedes propulsar la nave <span class="pc">usando la Barra Espaciadora</span><span class="movil">tocando la pantalla</span> 
+                                    para reducir su velocidad y evitar que explote. ¡Pero ves con cuidado! La gasolina es limitada y podrías quedarte sin ella.
+                                </p>
+                                <p class="pc">Puedes pausar el juego pulsando P en cualquier momento.</p>
+                                <p class="pc">Usa el ratón para navegar por el menú superior.</p>
+                                <p>¡Suerte Astronauta!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalRegistro" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title text-center">REGISTRO</h2>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Nombre" name="name" type="text" id="regName" maxlength="20">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Nombre de Usuario" name="username" type="text" id="regUser" maxlength="20">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Contraseña" name="password" type="password" value="" id="regPwd" maxlength="20">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Repite Contraseña" name="password2" type="password" value="" id="regPwd2" maxlength="20">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-lg btn-success btn-block" id="btnReg">Registrarse</button>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-lg btn btn-danger btn-block" id="btnCancel">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
