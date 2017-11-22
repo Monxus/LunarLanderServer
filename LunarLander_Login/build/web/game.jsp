@@ -1,0 +1,200 @@
+<%-- 
+    Document   : game
+    Created on : 21-nov-2017, 17:18:53
+    Author     : Ramon
+--%>
+
+<%@page import="ClasesAux.User"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<% User u = (User) request.getAttribute("user");
+String name= u.getName();
+%>
+<% if(u==null){
+    response.sendRedirect("/LunarLander_Login");
+}%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lunar Lander</title>
+        <meta charset="UTF-8">
+        <meta name="description" content="Juego de aterrizar un cohete sobre la luna">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel='stylesheet' media='screen and (min-width: 961px)' href='css/d.css'>
+        <link rel='stylesheet' media='screen and (max-width: 960px)' href='css/m.css'>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="js/js.js"></script>
+    </head>
+    <body>
+        <div id="nave">
+            <img id="naveimg" src="img/nave.png" alt="img nave">
+        </div>
+        <div class="a">
+            <div id="showm">
+                <img id="opcionesimg" src="img/opciones.png" alt="opciones">
+            </div>
+            <ul id="cpanel">
+                <li class="textopanel">Velocidad: <span id="velocidad">100</span> m/s</li>
+                <li class="textopanel">Fuel: <span id="fuel">100</span> l</li>
+                <li class="textopanel">Altura: <span id="altura">70</span> m</li>
+            </ul>
+        </div>
+        <div class="b">
+            <img id="earth" src="img/earth.png" alt="img earth">
+        </div>
+        <div class="c">
+            <div id="hidem"><img id="closeimg" src="img/close.png" alt="close"></div>
+            <div class="movil" id="restartMovil"><img id="restartimg" src="img/restart.png" alt="restart"></div>
+            <ul id="menu">
+                <li class="elementomenu" id="play">JUGAR</li>
+                <li class="elementomenu" id="instruction">INSTRUCCIONES</li>
+                <li class="elementomenu" id="option">OPCIONES</li>
+                <li class="elementomenu" id="about">ACERCA DE...</li>
+            </ul>
+        </div>
+        <div class="d"></div>
+        <div class="divEmergente" id="divpausa">
+            <h1>Juego en Pausa</h1>
+            <ul id="menuPausa">
+                <li class="listaPausa" id="continuarPausa">Continuar</li>
+                <li class="listaPausa" id="reiniciarPausa">Reiniciar</li>
+            </ul>
+        </div>
+        <div class="divEmergente" id="divinstrucciones">
+            <h1>Instrucciones</h1>
+            <div class=parrafosEmergentes>
+                <p>El objetivo de Lunar Lander es aterrizar la nave sobre la superficie de la Luna sin que se estrelle.</p>
+                <p>Puedes propulsar la nave <span class="pc">usando la Barra Espaciadora</span><span class="movil">tocando la pantalla</span> 
+                    para reducir su velocidad y evitar que explote. ¡Pero ves con cuidado! La gasolina es limitada y podrías quedarte sin ella.
+                </p>
+                <p class="pc">Puedes pausar el juego pulsando P en cualquier momento.</p>
+                <p class="pc">Usa el ratón para navegar por el menú superior.</p>
+                <p>¡Suerte Astronauta!</p>
+            </div>
+            <h2 class="volverMovil">Volver</h2>
+        </div>
+        <!--El próximo div es igual que el de instrucciones, pero al intentar transformar el otro con JS me daba varios problemas, así que he optado por esto-->
+        <div class="divEmergente" id="divBienvenida">
+
+            <h1>Bienvenido a Lunar Lander</h1>
+            <div class=parrafosEmergentes id="parrafoBienvenida">
+                <p>El objetivo de Lunar Lander es aterrizar la nave sobre la superficie de la Luna sin que se estrelle.</p>
+                <p>Puedes propulsar la nave <span class="pc">usando la Barra Espaciadora</span><span class="movil">tocando la pantalla</span> 
+                    para reducir su velocidad y evitar que explote. ¡Pero ves con cuidado! La gasolina es limitada y podrías quedarte sin ella.
+                </p>
+                <p class="pc">Puedes pausar el juego pulsando P en cualquier momento.</p>
+                <p class="pc">Usa el ratón para navegar por el menú superior.</p>
+                <p>¡Suerte Astronauta!</p>
+            </div>
+            <h2 id="bienvenidaJugar">JUGAR</h2>
+        </div>
+        <!--        <div class="divEmergente" id="divopciones">
+                    <div id="opcionesParaMovil">
+                        <h1>Dificultad</h1>
+                        <ul>
+                            <li class="listaOpciones" id="facilNivel">Fácil</li>
+                            <li class="listaOpciones" id="medioNivel">Medio</li>
+                            <li class="listaOpciones" id="dificilNivel">Difícil</li>
+                        </ul>
+                        <p class=parrafosEmergentes id="parrafoNivel">FÁCIL: Tienes 100 litros de combustible y debes aterrizar a menos de 5 m/s.</p>
+                        <h1>Nave</h1>
+                        <ul>
+                            <li class="listaOpciones listaEspecial" id="naveOpcion">Nave</li>
+                            <li class="listaOpciones listaEspecial" id="ovniOpcion">OVNI</li>
+                        </ul>
+                        <h1>Lugar Aterrizaje</h1>
+                        <ul>
+                            <li class="listaOpciones listaEspecial" id="lunaOpcion">Luna</li>
+                            <li class="listaOpciones listaEspecial" id="marteOpcion">Marte</li>
+                        </ul>
+                        <button type="button" id="botonGuardar">Guardar Configuración</button>
+                    </div>
+                    <h2 <class="volverMovil">Volver</h2>        
+                </div>-->
+        <div class="divEmergente" id="divabout">
+            <h1>Acerca de...</h1>
+            <div class=parrafosEmergentes id="parrafosAbout">
+                <p>IES Francesc Borja Moll - 1º DAM</p>
+                <p>Ramón Moreno</p>
+                <p>Con la ayuda de:</p>
+                <p><a href="http://www.w3schools.com/" target="_blank">W3Schools</a></p>
+                <p><a href="http://stackoverflow.com/" target="_blank">StackOverflow</a></p>
+            </div>
+            <h2 class="volverMovil">Volver</h2>
+        </div>
+        <div class="divEmergente" id="divFinJuego">
+            <h1 id="cabezeraFin">.</h1>
+            <p class="parrafosEmergentes" id="parrafoFin">.</p>
+            <h2 id="rejugar">Volver a jugar</h2>
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal2" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title text-center">Bienvenido <%= name %></h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p>Elige la dificultad</p>
+                        <select id="selOpciones"></select>
+                        <br>
+                        <br>
+                        <div class="btn-group-vertical text-center">
+                            <button type="button" class="btn btn-primary text-center" id="cargarModal">Cargar configuración seleccionada</button>
+                            <button type="button" class="btn btn-primary text-center" id="newConfigModal">Nueva configuración</button>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer text-center">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal opciones -->
+        <div class="modal fade" id="myModalOp" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title text-center">Nombre Configuración</h4>
+                        <input type="text" id="nameConfig">
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="divEmergente" id="divopciones">
+                            <div id="opcionesParaMovil">
+                                <h1>Dificultad</h1>
+                                <ul>
+                                    <li class="listaOpciones" id="facilNivel">Fácil</li>
+                                    <li class="listaOpciones" id="medioNivel">Medio</li>
+                                    <li class="listaOpciones" id="dificilNivel">Difícil</li>
+                                </ul>
+                                <p class=parrafosEmergentes id="parrafoNivel">FÁCIL: Tienes 100 litros de combustible y debes aterrizar a menos de 5 m/s.</p>
+                                <h1>Nave</h1>
+                                <ul>
+                                    <li class="listaOpciones listaEspecial" id="naveOpcion">Nave</li>
+                                    <li class="listaOpciones listaEspecial" id="ovniOpcion">OVNI</li>
+                                </ul>
+                                <h1>Lugar Aterrizaje</h1>
+                                <ul>
+                                    <li class="listaOpciones listaEspecial" id="lunaOpcion">Luna</li>
+                                    <li class="listaOpciones listaEspecial" id="marteOpcion">Marte</li>
+                                </ul>
+
+                            </div>       
+                        </div>
+                    </div>
+                    <div class="modal-footer text-center">
+                        <button type="button" class="btn btn-primary text-center" id="saveConfigModal">Guardar configuración</button>
+                        <button type="button" class="btn btn-primary text-center" id="cancelModal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
+
